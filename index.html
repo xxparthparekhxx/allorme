@@ -1,0 +1,56 @@
+<script>
+    function checkservice() {
+        document.getElementById("result").innerHTML = "loading";
+        let websitename = document.getElementById("website-url").value;
+        fetch("https://asia-south1-githubprojects-777.cloudfunctions.net/allorme",
+            {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "url": websitename
+                })
+                ,
+            }).then(response => {
+                response.json().then(
+                    x => {
+                        if (x['code'] == 200) {
+                            document.getElementById("result").innerHTML = "⬆️its working "+ websitename +" responded with " + x['code'] + ' in ' + x['timetaken'] + " miliseconds !";
+                        }
+                        else if (x['code'] == 404) {
+                            document.getElementById("result").innerHTML = "💥 its Down for us all"
+                        }
+                        else { console.log("it errored out") }
+                    })
+                document.getElementById("website-url").value = ""
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
+</script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AllorMe</title>
+    <link rel="icon" type="image/x-icon" href="https://storage.googleapis.com/allorme/favicon.png">
+</head>
+
+<body>
+    <div style="height: 10%;width: 100"></div>
+    <div style="height: 10%;width: 100%;text-align: center;padding: 20px 0;">
+        is <input type="url" id="website-url"> down for <input type="button" value="me or all ?" size="50%"
+            onclick="checkservice()">
+    </div>
+    <div id="result" style="height: 10%;width: 100%;text-align: center;">
+        enter any website url
+    </div>
+</body>
+
+</html>
